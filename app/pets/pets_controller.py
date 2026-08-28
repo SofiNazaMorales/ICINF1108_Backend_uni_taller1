@@ -1,5 +1,5 @@
 from fastapi import APIRouter
-
+from app.shared.api_response import ApiResponse
 from app.pets.pets_schemas import CreatePetDto, Pet, UpdatePetDto
 from app.pets.pets_service import pets_service
 
@@ -25,5 +25,18 @@ def update(studentId: str, petId: str, body: UpdatePetDto) -> Pet:
 
 
 @router.delete("/{petId}")
-def delete(studentId: str, petId: str) -> Pet:
-    return pets_service.delete(studentId, petId)
+def delete(studentId: str, petId: str) -> ApiResponse[None]:
+    deleted = pets_service.delete(studentId, petId)
+    if not deleted:
+        return ApiResponse(
+            success=False,
+            error={"code": "PET_NOT_FOUND"},
+            data=None,
+            message=f"The pet with id {petId} was not found."
+        )
+    return ApiResponse(
+        success=True,
+        error=None,
+        data=None,
+        message=f"The pet with id {petId} was deleted successfully."
+    )

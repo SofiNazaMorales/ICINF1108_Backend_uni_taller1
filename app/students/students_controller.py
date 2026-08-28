@@ -3,6 +3,7 @@ from fastapi import APIRouter
 from app.pets.pets_service import pets_service
 from app.students.students_schemas import CreateStudentDto, Student, UpdateStudentDto
 from app.students.students_service import students_service
+from app.shared.api_response import ApiResponse
 
 router = APIRouter(prefix="/api/students", tags=["Students"])
 
@@ -27,9 +28,21 @@ def update(student_id: str, body: UpdateStudentDto) -> Student:
     return students_service.update(student_id, body)
 
 
-@router.delete("/{student_id}")
-def delete(student_id: str) -> Student:
+@router.delete("/{student_id}", response_model=ApiResponse[None])
+def delete(student_id: str):
     deleted = students_service.delete(student_id)
+    if not deleted:
+        return ApiResponse(
+            success=False,
+            error={"code": "STUDENT_NOT_FOUND"},
+            data=None,
+            message=f"The student with id {student_id} was not found."
+        )
     pets_service.delete_all_for_student(student_id)
 
-    return deleted
+    return ApiResponse(
+        success=True,
+        error=None,
+        data=None,
+        message=f"The student with id {student_id} was deleted successfully."
+    )
