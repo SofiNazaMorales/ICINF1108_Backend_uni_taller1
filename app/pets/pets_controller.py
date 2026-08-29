@@ -16,9 +16,9 @@ def find_all(studentId: str) -> ApiResponse[list[Pet]]:
 
     return ApiResponse(
         success=True,
-        message="Mascotas obtenidas correctamente.",
+        message="Properly obtained pets.",
         data=pets,
-        statusCode=200,
+        error=None,
     )
 
 
@@ -28,9 +28,9 @@ def create(studentId: str, body: CreatePetDto) -> ApiResponse[Pet]:
 
     return ApiResponse(
         success=True,
-        message="Mascota creada correctamente.",
+        message="Pet created successfully.",
         data=pet,
-        statusCode=201,
+        error=None,
     )
 
 
@@ -44,19 +44,19 @@ def update(
 
     return ApiResponse(
         success=True,
-        message="Mascota actualizada correctamente.",
+        message="Pet succesfully updated.",
         data=pet,
-        statusCode=200,
+        error=None,
     )
 
 
 @router.delete("/{petId}")
-def delete(studentId: str, petId: str) -> ApiResponse[Pet]:
-    pet = pets_service.delete(studentId, petId)
+def delete(studentId: str, petId: str) -> ApiResponse[None]:
+  pets_service.delete(studentId, petId)
 
-    return ApiResponse(
-        success=True,
-        message="Mascota eliminada correctamente.",
-        data=pet,
-        statusCode=200,
-    )
+  return ApiResponse(
+      success=True,
+      message="Pet deleted successfully.",
+      data=None,
+      error=None,
+     )
