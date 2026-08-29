@@ -14,9 +14,9 @@ def find_all() -> ApiResponse[list[Student]]:
 
     return ApiResponse(
         success=True,
-        message="Estudiantes obtenidos correctamente.",
+        message="Students obtained successfully.",
         data=students,
-        statusCode=200,
+        error=None,
     )
 
 
@@ -26,9 +26,9 @@ def find_by_id(student_id: str) -> ApiResponse[Student]:
 
     return ApiResponse(
         success=True,
-        message="Estudiante obtenido correctamente.",
+        message="Student obtained successfully.",
         data=student,
-        statusCode=200,
+        error=None,
     )
 
 
@@ -38,9 +38,9 @@ def create(body: CreateStudentDto) -> ApiResponse[Student]:
 
     return ApiResponse(
         success=True,
-        message="Estudiante creado correctamente.",
+        message="Student created successfully.",
         data=student,
-        statusCode=201,
+        error=None,
     )
 
 
@@ -50,20 +50,20 @@ def update(student_id: str, body: UpdateStudentDto) -> ApiResponse[Student]:
 
     return ApiResponse(
         success=True,
-        message="Estudiante actualizado correctamente.",
+        message="Student updated successfully.",
         data=student,
-        statusCode=200,
+        error=None,
     )
 
 
 @router.delete("/{student_id}")
-def delete(student_id: str) -> ApiResponse[Student]:
-    deleted = students_service.delete(student_id)
-    pets_service.delete_all_for_student(student_id)
+def delete(student_id: str) -> ApiResponse[None]:
+  students_service.delete(student_id)
+  pets_service.delete_all_for_student(student_id)
 
-    return ApiResponse(
-        success=True,
-        message="Estudiante eliminado correctamente.",
-        data=deleted,
-        statusCode=200,
-    )
+  return ApiResponse(
+      success=True,
+      message="Student deleted successfully.",
+      data=None,
+      error=None,
+  )
