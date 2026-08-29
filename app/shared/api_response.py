@@ -1,3 +1,4 @@
+
 from typing import Generic, TypeVar, Optional, Any
 from pydantic import BaseModel
 
@@ -8,3 +9,4 @@ class ApiResponse(BaseModel, Generic[T]):
     error: Optional[Any] = None
     data: Optional[T] = None
     message: str
+

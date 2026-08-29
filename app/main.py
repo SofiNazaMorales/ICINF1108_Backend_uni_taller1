@@ -1,9 +1,9 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
-
+from fastapi import FastAPI, HTTPException
 from app.pets.pets_controller import router as pets_router
 from app.students.students_controller import router as students_router
-
+from app.shared.api_exception_handler import api_exception_handler
 
 def create_app() -> FastAPI:
     app = FastAPI(
@@ -13,7 +13,8 @@ def create_app() -> FastAPI:
         ),
         version="1.0",
     )
-
+    app.add_exception_handler(HTTPException, api_exception_handler)
+    
     app.add_middleware(
         CORSMiddleware,
         allow_origins=["*"],
