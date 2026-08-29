@@ -1,8 +1,11 @@
 from fastapi import APIRouter
 from app.shared.api_response import ApiResponse
 
+
+
 from app.pets.pets_schemas import CreatePetDto, Pet, UpdatePetDto
 from app.pets.pets_service import pets_service
+from app.shared.api_response import ApiResponse
 
 router = APIRouter(
     prefix="/api/students/{studentId}/pets",
@@ -11,13 +14,34 @@ router = APIRouter(
 
 
 @router.get("")
-def find_all(studentId: str) -> list[Pet]:
-    return pets_service.find_all_for_student(studentId)
+def find_all(studentId: str) -> ApiResponse[list[Pet]]:
+    pets = pets_service.find_all_for_student(studentId)
+
+    return ApiResponse(
+        success=True,
+        message="Properly obtained pets.",
+        data=pets,
+        error=None,
+    )
 
 
 @router.post("", status_code=201)
-def create(studentId: str, body: CreatePetDto) -> Pet:
-    return pets_service.create(studentId, body)
+def create(studentId: str, body: CreatePetDto) -> ApiResponse[Pet]:
+    pet = pets_service.create(studentId, body)
+    if not pet:
+        return ApiResponse(
+            success=False,
+            error={"code": "STUDENT_NOT_FOUND"},
+            data=None,
+            message=f"Failed to create pet. The student with id {studentId} was not found."
+        )
+    return ApiResponse(
+        success=True,
+        message="Pet created successfully.",
+        data=pet,
+        error=None,
+    )
+
 
 
 @router.patch("/{petId}", response_model=ApiResponse[Pet])
@@ -25,7 +49,29 @@ def update(studentId: str, petId: str, body: UpdatePetDto) -> ApiResponse[Pet]:
     updated = pets_service.update(studentId, petId, body)
     return ApiResponse.ok(data=updated, message="Mascota actualizada")
 
+@router.patch("/{petId}")
+def update(
+    studentId: str,
+    petId: str,
+    body: UpdatePetDto,
+) -> ApiResponse[Pet]:
+    pet = pets_service.update(studentId, petId, body)
+
+    return ApiResponse(
+        success=True,
+        message="Pet succesfully updated.",
+        data=pet,
+        error=None,
+    )
+
 
 @router.delete("/{petId}")
-def delete(studentId: str, petId: str) -> Pet:
-    return pets_service.delete(studentId, petId)
+def delete(studentId: str, petId: str) -> ApiResponse[None]:
+  pets_service.delete(studentId, petId)
+
+  return ApiResponse(
+      success=True,
+      message="Pet deleted successfully.",
+      data=None,
+      error=None,
+     )
