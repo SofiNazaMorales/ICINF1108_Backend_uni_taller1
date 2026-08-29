@@ -63,14 +63,19 @@ def update(student_id: str, body: UpdateStudentDto) -> Student:
     )
 
 
-@router.delete("/{student_id}")
-def delete(student_id: str) -> ApiResponse[None]:
-  students_service.delete(student_id)
-  pets_service.delete_all_for_student(student_id)
-
-  return ApiResponse(
-      success=True,
-      message="Student deleted successfully.",
-      data=None,
-      error=None,
-  )
+@router.delete("/{studentId}")
+def delete(studentId: str) -> ApiResponse[None]:
+    deleted = students_service.delete(studentId)
+    if not deleted:
+        return ApiResponse(
+            success=False,
+            error={"code": "STUDENT_NOT_FOUND"},
+            data=None,
+            message=f"The student with id {studentId} was not found."
+        )
+    return ApiResponse(
+        success=True,
+        error=None,
+        data=None,
+        message=f"The student with id {studentId} was deleted successfully."
+    )

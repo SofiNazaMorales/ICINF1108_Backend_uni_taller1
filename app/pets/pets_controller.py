@@ -58,11 +58,19 @@ def update(
 
 @router.delete("/{petId}")
 def delete(studentId: str, petId: str) -> ApiResponse[None]:
-  pets_service.delete(studentId, petId)
-
-  return ApiResponse(
-      success=True,
-      message="Pet deleted successfully.",
-      data=None,
-      error=None,
-     )
+    deleted = pets_service.delete(studentId, petId)
+    if not deleted:
+        return ApiResponse(
+            success=False,
+            error={"code": "PET_NOT_FOUND"},
+            data=None,
+            message=f"The pet with id {petId} was not found."
+        )
+    return ApiResponse(
+        success=True,
+        message="Pet succesfully updated.",
+        data=pet,
+        error=None,
+        data=None,
+        message=f"The pet with id {petId} was deleted successfully."
+    )
