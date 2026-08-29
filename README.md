@@ -76,3 +76,14 @@ La aplicación queda disponible en:
 - `make format` — formatea el código con Ruff
 - `make format-check` — verifica el formato
 - `make clean` — elimina `.venv`, cachés y artefactos
+
+
+## Contrato Global
+```json
+{
+  "success": boolean,
+  "error": null / object / array,
+  "data": null / object / array,
+  "message": string
+}
+```

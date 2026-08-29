@@ -1,5 +1,5 @@
 from fastapi import APIRouter
-
+from app.shared.api_response import ApiResponse
 from app.pets.pets_schemas import CreatePetDto, Pet, UpdatePetDto
 from app.pets.pets_service import pets_service
 from app.shared.api_response import ApiResponse
@@ -25,7 +25,13 @@ def find_all(studentId: str) -> ApiResponse[list[Pet]]:
 @router.post("", status_code=201)
 def create(studentId: str, body: CreatePetDto) -> ApiResponse[Pet]:
     pet = pets_service.create(studentId, body)
-
+    if not pet:
+        return ApiResponse(
+            success=False,
+            error={"code": "STUDENT_NOT_FOUND"},
+            data=None,
+            message=f"Failed to create pet. The student with id {studentId} was not found."
+        )
     return ApiResponse(
         success=True,
         message="Pet created successfully.",
