@@ -43,12 +43,6 @@ def create(studentId: str, body: CreatePetDto) -> ApiResponse[Pet]:
     )
 
 
-
-@router.patch("/{petId}", response_model=ApiResponse[Pet])
-def update(studentId: str, petId: str, body: UpdatePetDto) -> ApiResponse[Pet]:
-    updated = pets_service.update(studentId, petId, body)
-    return ApiResponse.ok(data=updated, message="Mascota actualizada")
-
 @router.patch("/{petId}")
 def update(
     studentId: str,

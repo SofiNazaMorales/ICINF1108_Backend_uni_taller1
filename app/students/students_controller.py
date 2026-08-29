@@ -55,7 +55,7 @@ def create(body: CreateStudentDto) -> ApiResponse[Student]:
 @router.patch("/{student_id}", response_model=ApiResponse[Student])
 def update(student_id: str, body: UpdateStudentDto) -> ApiResponse[Student]:
     updated = students_service.update(student_id, body)
-    return ApiResponse.ok(data=updated, message="Estudiante actualizado")
+    return ApiResponse.ok(data=updated, message="up-to-date student")
 
     return ApiResponse(
         success=True,

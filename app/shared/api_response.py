@@ -1,4 +1,3 @@
-
 from typing import Generic, TypeVar
 from pydantic import BaseModel
 
@@ -21,17 +20,3 @@ class ApiResponse(BaseModel, Generic[T]):
         cls, message: str, status_code: int = 400, errors: list[str] | None = None
     ) -> "ApiResponse[None]":
         return cls(success=False, status_code=status_code, message=message, errors=errors)
-
-
-from typing import Generic, TypeVar, Optional, Any
-from pydantic import BaseModel
-
-T = TypeVar('T')
-
-class ApiResponse(BaseModel, Generic[T]):
-    success: bool
-    error: Optional[Any] = None
-    data: Optional[T] = None
-    message: str
-
-
