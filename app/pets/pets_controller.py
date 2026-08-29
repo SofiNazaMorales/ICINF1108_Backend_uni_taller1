@@ -11,8 +11,15 @@ router = APIRouter(
 
 
 @router.get("")
-def find_all_for_student(studentId: str) -> list[Pet]:
-    return pets_service.find_all_for_student(studentId)
+def find_all(studentId: str) -> ApiResponse[list[Pet]]:
+    pets = pets_service.find_all_for_student(studentId)
+
+    return ApiResponse(
+        success=True,
+        message="Properly obtained pets.",
+        data=pets,
+        error=None,
+    )
 
 
 @router.post("", status_code=201)
@@ -29,30 +36,33 @@ def create(studentId: str, body: CreatePetDto) -> ApiResponse[Pet]:
         success=True,
         message="Pet created successfully.",
         data=pet,
-        statusCode=201,
+        error=None,
     )
 
 
 @router.patch("/{petId}")
-def update(studentId: str, petId: str, body: UpdatePetDto) -> Pet:
-    return pets_service.update(studentId, petId, body)
+def update(
+    studentId: str,
+    petId: str,
+    body: UpdatePetDto,
+) -> ApiResponse[Pet]:
+    pet = pets_service.update(studentId, petId, body)
+
+    return ApiResponse(
+        success=True,
+        message="Pet succesfully updated.",
+        data=pet,
+        error=None,
+    )
 
 
 @router.delete("/{petId}")
-
 def delete(studentId: str, petId: str) -> ApiResponse[None]:
-    deleted = pets_service.delete(studentId, petId)
-    if not deleted:
-        return ApiResponse(
-            success=False,
-            error={"code": "PET_NOT_FOUND"},
-            data=None,
-            message=f"The pet with id {petId} was not found."
-        )
-    return ApiResponse(
-        success=True,
-        error=None,
-        data=None,
-        message=f"The pet with id {petId} was deleted successfully."
-    )
+  pets_service.delete(studentId, petId)
 
+  return ApiResponse(
+      success=True,
+      message="Pet deleted successfully.",
+      data=None,
+      error=None,
+     )
